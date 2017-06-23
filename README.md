@@ -11,5 +11,5 @@
 
 Edite esta lista y añada los nombres de los integrantes, luego borre esta línea.
 
-* Integrante 1
-* Integrante 2
+* jonathan parrales
+* luis andrade
