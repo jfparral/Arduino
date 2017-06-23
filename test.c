@@ -17,10 +17,13 @@ void error(char* msg)
 
 int main(int argc, char *argv[])
 {
-	int fd = -1,text1,text2;
+	int fd = -1,reader;
 	int baudrate = 9600;  // default
-	char datos[3],temperatura[3];
-	int numbytes;
+	char temp='t';
+	char h='h';
+	short buffer;
+	short nbytes=1;
+	int sumTotalTemp=0,sumToralH=0, promt, promh,cont=0;
 
 	fd = serialport_init("/dev/ttyACM0", baudrate);
 
@@ -34,18 +37,28 @@ int main(int argc, char *argv[])
   /* Bucle de lectura/escritura */
   	
 	while(1){
+		write(fd, &temp, nbytes);
+		usleep(50000);
+		reader = read(fd, &buffer, nbytes);
+		printf("%u\n", buffer);    
+		usleep(500000);
+		sumTotalTemp=sumTotalTemp+buffer;
+		write(fd, &h, nbytes);
+		usleep(50000);
+		reader = read(fd, &buffer, nbytes);     
+		printf("%u\n", buffer);
+		sumToralH=sumToralH+buffer;
 		
-		//text2=read(fd,datos1,sizeof(int));
-		write(fd,&temperatura,sizeof(char));
-		usleep(5000);
-		read(fd,&datos,1);
-		printf("%s\n",datos);
-		printf("%s\n",temperatura);
-		
-		
-
+		cont++;
+		if(cont==12){
+			break;
+		}
 	}
-	close(fd);	
+	close(fd);
+	promt=sumTotalTemp/cont;
+	printf("\nel promedio de temperatura es : %d\n",promt);
+	promh=sumToralH/cont;
+	printf("el promedio de humedad es : %d\n",promh);
 	return 0;	
 }
 
